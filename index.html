@@ -1,0 +1,82 @@
+
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+    body {
+        font-family: "Helvetica Neue";
+        margin: 10px;
+    }
+    h1 {
+        width: 100%;
+    }
+    svg {
+        border: 2px solid black;
+        margin: 10px;
+        float: left;
+    }
+    #hoodinfo {
+        //border: 2px solid black;
+        color: white;
+        background-color: black;
+        width: 30em;
+        float: left;
+        padding: 10px;
+        margin: 10px;
+    }
+    #hoodname {
+        height: 3em;
+    }
+
+</style>
+<body>
+    <h1>hothoods.info</h1>
+    <div id="hoodinfo">
+        <h2 id="hoodname">hothoods.info</h2>
+        <dl>
+            <dt>Borough</dt>
+            <dd id="boroname"></dd>
+        </dl>
+    </div>
+<script src="js/d3.v3.min.js"></script>
+<script src="js/topojson.js"></script>
+<script src="js/jquery.min.js"></script>
+<script>
+    $("#hoodinfo").hide()
+
+    var width = 400,
+        height = 550;
+
+    var svg = d3.select("body").insert("svg", "#hoodinfo")
+        .attr("width", width)
+        .attr("height", height);
+    var group = svg.append('g');
+    
+    d3.json("nyhoods.geojson", function(error, nyc) {
+        var hover = function(d, i){
+            if (d.properties.NTAName.match(/-etc-/)) return;
+            if (d.properties.NTAName === "Airport") return;
+            $("#hoodinfo").show()
+            $("#hoodname").text(d.properties.NTAName);
+            $("#boroname").text(d.properties.BoroName);
+            d3.select(this).style("fill", "gray");
+        };
+        var unhover = function(d, i){
+            d3.select(this).style("fill", "black");
+            $("#hoodinfo").hide()
+        };
+        var projection = d3.geo.albers()
+            .translate([-16300, 4100])
+            .scale(56000);
+            // .center([0, 0])
+        group.selectAll('path')
+        .data(nyc.features)
+        .enter().append('path')
+            .attr('d', d3.geo.path().projection(projection))
+            //.attr('id', function(d){return d.properties.name.replace(/\s+/g, '')})
+            .style('fill', 'black')
+            .style('stroke', 'black')
+            .on("mouseover", hover)
+            .on("mouseout", unhover);
+    });
+
+</script>
