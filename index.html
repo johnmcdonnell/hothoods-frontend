@@ -2,22 +2,30 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
 <style>
+    @import url(http://fonts.googleapis.com/css?family=Oxygen);
+
     body {
-        font-family: "Helvetica Neue";
-        margin: 10px;
+        font-family: Oxygen, "Helvetica Neue";
+        margin: 0 auto;
+        width: 900px;
     }
     h1 {
         width: 100%;
     }
-    header {
+    #header {
         background-color: black;
         color: white;
         overflow: hidden;
+        margin-top: 10px;
     }
     svg {
-        border: 2px solid black;
         margin: 10px;
         float: left;
+    }
+    #main {
+        margin: 10px auto;
+        border: 2px solid black;
+        overflow: hidden;
     }
     #logo {
         height: 2.5em;
@@ -28,7 +36,7 @@
         //border: 2px solid black;
         color: white;
         background-color: black;
-        width: 30em;
+        width: 400px;
         float: left;
         padding: 10px;
         margin: 10px;
@@ -39,43 +47,50 @@
 
 </style>
 <body>
-    <header>
+    <div id="header">
         <img id="logo" src="images/houseonfire.jpg" alt="hothoods">
         <h1>hothoods.info</h1>
-    </header>
-    <div id="hoodinfo">
-        <h2 id="hoodname">hothoods.info</h2>
-        <dl>
-            <dt>Borough</dt>
-            <dd id="boroname"></dd>
-        </dl>
+    </div>
+    <div id="main">
+        <div id="hoodinfo">
+            <h2 id="hoodname">hothoods.info</h2>
+            <p id="boroname"></p>
+        </div>
     </div>
 <script src="js/d3.v3.min.js"></script>
 <script src="js/topojson.js"></script>
 <script src="js/jquery.min.js"></script>
 <script>
-    $("#hoodinfo").hide()
+    $("#hoodinfo").fadeTo(0, 0);
 
     var width = 400,
         height = 550;
+    
+    var skippedhood = function(name) {
+        // Return True if this isn't a real neighborhood (like the airport)
+        // Otherwise return False.
+        if (name.match(/-etc-/)) return true;
+        if (name === "Airport") return true;
+        return false;
+    };
 
-    var svg = d3.select("body").insert("svg", "#hoodinfo")
+    var svg = d3.select("#main").insert("svg", "#hoodinfo")
         .attr("width", width)
         .attr("height", height);
     var group = svg.append('g');
     
+    
     d3.json("nyhoods.geojson", function(error, nyc) {
         var hover = function(d, i){
-            if (d.properties.NTAName.match(/-etc-/)) return;
-            if (d.properties.NTAName === "Airport") return;
-            $("#hoodinfo").show()
+            if (skippedhood(d.properties.NTAName)) return;
+            $("#hoodinfo").fadeTo(0, 1);
             $("#hoodname").text(d.properties.NTAName);
             $("#boroname").text(d.properties.BoroName);
             d3.select(this).style("fill", "gray");
         };
         var unhover = function(d, i){
             d3.select(this).style("fill", "black");
-            $("#hoodinfo").hide()
+            $("#hoodinfo").fadeTo(0, 0);
         };
         var projection = d3.geo.albers()
             .translate([-16300, 4100])
