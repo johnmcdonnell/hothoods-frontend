@@ -86,10 +86,14 @@
             $("#hoodinfo").fadeTo(0, 1);
             $("#hoodname").text(d.properties.NTAName);
             $("#boroname").text(d.properties.BoroName);
-            d3.select(this).style("fill", "gray");
+            d3.select(this)
+                .style("fill", "gray")
+                .style('stroke', 'gray');
         };
         var unhover = function(d, i){
-            d3.select(this).style("fill", "black");
+            d3.select(this)
+                .style("fill", "black")
+                .style('stroke', 'black');
             $("#hoodinfo").fadeTo(0, 0);
         };
         var projection = d3.geo.albers()
