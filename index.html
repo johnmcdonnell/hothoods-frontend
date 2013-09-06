@@ -93,11 +93,12 @@
     var group = svg.append('g');
     
     
-    d3.json("nyhoods.geojson", function(error, nyc) {
+    d3.json("nyc_zipcta.geojson", function(error, nyc) {
         var hover = function(d, i){
-            if (skippedhood(d.properties.NTAName)) return;
+            console.log(d);
+            if (skippedhood(d.properties.zcta5ce00)) return;
             $("#hoodinfo").fadeTo(0, 1);
-            $("#hoodname").text(d.properties.NTAName);
+            $("#hoodname").text(d.properties.zcta5ce00);
             $("#boroname").text(d.properties.BoroName);
             d3.select(this)
                 .style("fill", "gray")
