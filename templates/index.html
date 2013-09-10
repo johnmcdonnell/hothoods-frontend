@@ -5,27 +5,37 @@
     <meta charset="utf-8">
     <title>Hot Hoods</title>
     <link rel="stylesheet" href="static/css/pure-min.css">
+    <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
 
     <style>
         @import url(http://fonts.googleapis.com/css?family=Oxygen);
-        @import url(http://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+        @import url(http://fonts.googleapis.com/css?family=Trykker);
         
         body {
             font-family: Oxygen, "Helvetica Neue";
-            background-color: black;
+            // background-color: black;
             margin: 0 auto;
-            width: 900px;
+            // width: 900px;
+            // background-image:url('static/images/damask.jpg');
         }
         h1 {
             font-size: 2.8em;
             margin: 18px;
+            float: left;
+        }
+        a {
+            color: #aaa;
         }
         #header {
-            font-family: 'Yanone Kaffeesatz', sans-serif;
+            font-family: 'Trykker', sans-serif;
             background-color: black;
             color: white;
             overflow: hidden;
-            margin-top: 10px;
+            //margin-top: 10px;
+        }
+        #headline {
+            width: 900px;
+            margin: 0 auto;
         }
         svg {
             float: left;
@@ -37,7 +47,7 @@
         }
         #main {
             margin: 10px auto;
-            border: 2px solid black;
+            width: 900px;
             background-color: white;
             overflow: hidden;
         }
@@ -51,21 +61,37 @@
             color: black;
             background-color: white;
             width: 400px;
+            height: 370px;
             float: left;
             padding: 10px;
             margin: 10px;
         }
         #hoodname {
-            height: 3em;
+        }
+        #selectedtray {
+            width: 500px;
+            float: left
+        }
+        .selected {
+            border: 2px solid black;
+            width: 7em;
+            margin: 5px;
+            padding: 5px;
+            float: left;
         }
 
     </style>
 </head>
 <body>
     <div id="header">
-        <img id="logo" src="static/images/houseonfire.jpg" alt="hothoods">
+        <!-- <img id="logo" src="static/images/houseonfire.jpg" alt="hothoods"> -->
         <div id="headline">
-            <h1>hothoods.info</h1>
+            <h1>
+            <i class="icon-home"></i> 
+            hothoods.info</h1>
+        <p style="float: right; text-align: right; font-style: italic; margin-top: 3em;">A <a href="http://jvmcdonnell.com">
+            jvmcdonnell.com
+        </a> production</p>
         </div>
     </div>
     <div id="main">
@@ -73,12 +99,16 @@
             <h2 id="hoodname">hothoods.info</h2>
             <!--<p id="boroname"></p> -->
         </div>
+        <div id="selectedtray">
+        </div>
     </div>
+<script src="static/js/underscore.js"></script>
 <script src="static/js/d3.v3.min.js"></script>
 <script src="static/js/topojson.js"></script>
 <script src="static/js/jquery.min.js"></script>
+
 <script>
-    // $("#hoodinfo").fadeTo(0, 0);
+    $("#hoodinfo").fadeTo(0, 0);
 
     var skippedhood = function(name) {
         // Return True if this isn't a real neighborhood (like the airport)
@@ -87,19 +117,21 @@
         if (name === "Airport") return true;
         return false;
     };
+    selected = [];
 
     var svg = d3.select("#main").insert("svg", "#hoodinfo")
         .attr("width", 400)
-        .attr("height", 450);
+        .attr("height", 550);
     var group = svg.append('g');
     
-    var chartmargin = {top: 20, right: 20, bottom: 90, left: 70},
+    var chartmargin = {top: 20, right: 20, bottom: 90, left: 120},
         chartwidth = 400 - chartmargin.left - chartmargin.right,
         chartheight = 300 - chartmargin.top - chartmargin.bottom;
     var parseDate = d3.time.format("%Y-%m-%d").parse;
     var x = d3.time.scale()
         .range([0, chartwidth]);
-    var y = d3.scale.linear()
+    var y = d3.scale.log()
+        .base(2)
         .range([chartheight, 0]);
     var xAxis = d3.svg.axis()
         .scale(x)
@@ -107,6 +139,8 @@
     var yAxis = d3.svg.axis()
         .scale(y)
         .orient("left");
+    yAxis.ticks(20);
+    yAxis.tickFormat(d3.format("$d"));
     var line = d3.svg.line()
         .x(function(d) { return x(d.SaleDate); })
         .y(function(d) { return y(d.ppsqft); });
@@ -125,8 +159,9 @@
                 d.ppsqft = +d.ppsqft;
             })
             x.domain(d3.extent(zipdata.prices, function(d) { return d.SaleDate; }));
-            y.domain(d3.extent(zipdata.prices, function(d) { return d.ppsqft; }));
-
+            y.domain([64,2048]); //d3.extent(zipdata.prices, function(d) { return d.ppsqft; }));
+            console.log(d3.extent(zipdata.prices, function(d) { return d.ppsqft; }));
+            
             // x-axis
             chartsvg.append("g")
                 .attr("class", "x axis")
@@ -138,18 +173,17 @@
                 .attr("dy", ".35em")
                 .attr("transform", "rotate(90)")
                 .style("text-anchor", "start");
-
-
+            
             // y axis
             chartsvg.append("g")
                 .attr("class", "y axis")
                 .call(yAxis)
               .append("text")
                 .attr("transform", "rotate(-90)")
-                .attr("y", 6)
+                .attr("y", -76)
                 .attr("dy", ".71em")
                 .style("text-anchor", "end")
-                .text("Price / sq.ft. ($)");
+                .text("Price / sq.ft.");
             
             // The line itself
             chartsvg.append("path")
@@ -162,13 +196,19 @@
     //drawchart("11211")
     
     d3.json("static/geojson/nyc_zipcta.geojson", function(error, nyc) {
-        var hover = function(d, i){
+        var clickhood = function(d, i) {
             zipname = d.properties.zcta5ce00;
-            if (skippedhood(zipname)) return;
             $("#hoodinfo").fadeTo(0, 1);
             $("#hoodname").text(zipname);
             drawchart(zipname)
             // $("#boroname").text(d.properties.BoroName);
+            
+            selected = '<div class="selected"> <i style="color: green" class="icon-circle-arrow-up"></i>  <a onclick="(function(e) { e.preventdefault(); drawchart(<%= zip %>); })()"><%= zip %></a> <span style="float: right;"><i class="icon-search"></i> <i class="icon-remove"></i></span> </div>';
+            $("#selectedtray").append(_.template(selected, {zip: zipname}));
+        }
+        var hover = function(d, i){
+            zipname = d.properties.zcta5ce00;
+            if (skippedhood(zipname)) return;
             d3.select(this)
                 .style("fill", "gray")
                 .style('stroke', 'gray');
@@ -177,7 +217,7 @@
             d3.select(this)
                 .style("fill", "black")
                 .style('stroke', 'black');
-            $("#hoodinfo").fadeTo(0, 0);
+            //$("#hoodinfo").fadeTo(0, 0);
         };
         var projection = d3.geo.albers()
             .translate([-16300, 4100])
@@ -191,7 +231,8 @@
             .style('fill', 'black')
             .style('stroke', 'black')
             .on("mouseover", hover)
-            .on("mouseout", unhover);
+            .on("mouseout", unhover)
+            .on("click", clickhood);
     });
 
 </script>
