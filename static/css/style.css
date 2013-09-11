@@ -1,0 +1,95 @@
+
+@import url(http://fonts.googleapis.com/css?family=Oxygen);
+@import url(http://fonts.googleapis.com/css?family=Ceviche+One);
+
+body {
+    font-family: Oxygen, "Helvetica Neue";
+    // background-color: black;
+    margin: 0 auto;
+    // width: 900px;
+    // background-image:url('static/images/damask.jpg');
+}
+h1 {
+    font-size: 2.8em;
+    margin: 18px;
+    float: left;
+    font-family: 'Ceviche One', sans-serif;
+    // color: #00ff00;
+}
+a {
+    color: #aaa;
+}
+#header {
+    background-color: black;
+    color: white;
+    overflow: hidden;
+    //margin-top: 10px;
+}
+#headline {
+    width: 900px;
+    margin: 0 auto;
+}
+svg {
+    float: left;
+}
+.domain {
+    fill: none;
+    stroke: black;
+    stroke-width: 1px;
+}
+.line {
+    fill: none;
+    stroke: black;
+    stroke-width: 1.5px;
+}
+.forecast {
+    fill: none;
+    stroke: red;
+    stroke-width: 3px;
+}
+.forecasterror {
+    fill: blue;
+    opacity: .2;
+}
+#main {
+    margin: 10px auto;
+    width: 900px;
+    background-color: white;
+    overflow: hidden;
+}
+#logo {
+    position: relative;
+    height: 40px;
+    top: 20px;
+    float: left;
+    //margin: 20px;
+}
+#hoodinfo {
+    //border: 2px solid black;
+    color: black;
+    background-color: white;
+    width: 400px;
+    height: 370px;
+    float: left;
+    padding: 10px;
+    margin: 10px;
+}
+#hoodname {
+    height: 1em;
+}
+#boroname {
+    text: gray;
+    font-style: italic;
+}
+#selectedtray {
+    width: 500px;
+    float: left
+}
+.selected {
+    border: 2px solid black;
+    width: 7em;
+    margin: 5px;
+    padding: 5px;
+    float: left;
+}
+
