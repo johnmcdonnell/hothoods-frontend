@@ -4,104 +4,17 @@
 <head>
     <meta charset="utf-8">
     <title>Hot Hoods</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <link rel="stylesheet" href="static/css/pure-min.css">
+    <link rel="stylesheet" href="static/css/style.css">
     <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
-
-    <style>
-        @import url(http://fonts.googleapis.com/css?family=Oxygen);
-        @import url(http://fonts.googleapis.com/css?family=Trykker);
-        
-        body {
-            font-family: Oxygen, "Helvetica Neue";
-            // background-color: black;
-            margin: 0 auto;
-            // width: 900px;
-            // background-image:url('static/images/damask.jpg');
-        }
-        h1 {
-            font-size: 2.8em;
-            margin: 18px;
-            float: left;
-        }
-        a {
-            color: #aaa;
-        }
-        #header {
-            font-family: 'Trykker', sans-serif;
-            background-color: black;
-            color: white;
-            overflow: hidden;
-            //margin-top: 10px;
-        }
-        #headline {
-            width: 900px;
-            margin: 0 auto;
-        }
-        svg {
-            float: left;
-        }
-        .domain {
-            fill: none;
-            stroke: black;
-            stroke-width: 1px;
-        }
-        .line {
-            fill: none;
-            stroke: black;
-            stroke-width: 1.5px;
-        }
-        .forecast {
-            fill: none;
-            stroke: red;
-            stroke-width: 3px;
-        }
-        .forecasterror {
-            fill: blue;
-            opacity: .2;
-        }
-        #main {
-            margin: 10px auto;
-            width: 900px;
-            background-color: white;
-            overflow: hidden;
-        }
-        #logo {
-            height: 2.9em;
-            float: left;
-            margin: 20px;
-        }
-        #hoodinfo {
-            //border: 2px solid black;
-            color: black;
-            background-color: white;
-            width: 400px;
-            height: 370px;
-            float: left;
-            padding: 10px;
-            margin: 10px;
-        }
-        #hoodname {
-        }
-        #selectedtray {
-            width: 500px;
-            float: left
-        }
-        .selected {
-            border: 2px solid black;
-            width: 7em;
-            margin: 5px;
-            padding: 5px;
-            float: left;
-        }
-
-    </style>
 </head>
 <body>
     <div id="header">
-        <!-- <img id="logo" src="static/images/houseonfire.jpg" alt="hothoods"> -->
         <div id="headline">
+        <!-- <img id="logo" src="static/images/houseonfire.jpg" alt="hothoods"> -->
             <h1>
-            <i class="icon-home"></i> 
+                <!-- <i class="icon-home"></i>  -->
             hothoods.info</h1>
         <p style="float: right; text-align: right; font-style: italic; margin-top: 3em;">A <a href="http://jvmcdonnell.com">
             jvmcdonnell.com
@@ -111,159 +24,19 @@
     <div id="main">
         <div id="hoodinfo">
             <h2 id="hoodname">hothoods.info</h2>
-            <!--<p id="boroname"></p> -->
+            <p id="boroname"></p>
         </div>
         <div id="selectedtray">
         </div>
     </div>
 <script src="static/js/underscore.js"></script>
 <script src="static/js/d3.v3.min.js"></script>
+<script src="static/js/queue.v1.min.js"></script>
 <script src="static/js/topojson.js"></script>
 <script src="static/js/jquery.min.js"></script>
+<script src="static/js/drawmap.js"></script>
+<script src="static/js/drawchart.js"></script>
 
 <script>
     $("#hoodinfo").fadeTo(0, 0);
-
-    var skippedhood = function(name) {
-        // Return True if this isn't a real neighborhood (like the airport)
-        // Otherwise return False.
-        if (name.match(/-etc-/)) return true;
-        if (name === "Airport") return true;
-        return false;
-    };
-    selected = [];
-
-    var svg = d3.select("#main").insert("svg", "#hoodinfo")
-        .attr("width", 400)
-        .attr("height", 550);
-    var group = svg.append('g');
-    
-    var chartmargin = {top: 20, right: 20, bottom: 90, left: 120},
-        chartwidth = 400 - chartmargin.left - chartmargin.right,
-        chartheight = 300 - chartmargin.top - chartmargin.bottom;
-    var parseDate = d3.time.format("%Y-%m-%d").parse;
-    var x = d3.time.scale()
-        .range([0, chartwidth]);
-    var y = d3.scale.log()
-        .base(2)
-        .range([chartheight, 0]);
-    var xAxis = d3.svg.axis()
-        .scale(x)
-        .orient("bottom");
-    var yAxis = d3.svg.axis()
-        .scale(y)
-        .orient("left");
-    yAxis.tickFormat(d3.format("$d"));
-    var line = d3.svg.line()
-        .x(function(d) { return x(d.date); })
-        .y(function(d) { return y(d.price); });
-    var errorspace = d3.svg.area()
-        .x(function(d) { return x(d.date); })
-        .y0(function(d) { return y(d.lo80); })
-        .y1(function(d) { return y(d.hi80); });
-    
-    var drawchart = function(zip) {
-        $("#hoodinfo > svg").remove();
-        d3.json("zip/"+zip, function(error, zipdata) {
-            $("#hoodname").append(": " + zipdata.hoodname)
-            var chartsvg = d3.select("#hoodinfo").append("svg")
-                .attr("width", chartwidth + chartmargin.left + chartmargin.right)
-                .attr("height", chartheight + chartmargin.top + chartmargin.bottom)
-              .append("g")
-                .attr("transform", "translate(" + chartmargin.left + "," + chartmargin.top + ")");
-            //zipdata.SaleDate = zipdata.SaleDate.map(parseDate);
-            zipdata.forecasts.forEach(function(d) {
-                d.date = parseDate(d.date);
-                d.price = +d.price;
-            })
-            zipdata.prices.forEach(function(d) {
-                d.date = parseDate(d.date);
-                d.price = +d.price;
-            })
-            x.domain(d3.extent(zipdata.prices.concat(zipdata.forecasts), function(d) { return d.date; }));
-            y.domain([80,1600]); //d3.extent(zipdata.prices, function(d) { return d.ppsqft; }));
-            
-            // x-axis
-            chartsvg.append("g")
-                .attr("class", "x axis")
-                .attr("transform", "translate(0," + chartheight + ")")
-                .call(xAxis)
-              .selectAll("text")
-                .attr("y", 0)
-                .attr("x", 9)
-                .attr("dy", ".35em")
-                .attr("transform", "rotate(90)")
-                .style("text-anchor", "start");
-            
-            // y axis
-            chartsvg.append("g")
-                .attr("class", "y axis")
-                .call(yAxis)
-              .append("text")
-                .attr("transform", "rotate(-90)")
-                .attr("y", -76)
-                .attr("dy", ".71em")
-                .style("text-anchor", "end")
-                .text("Price / sq.ft.");
-            
-            // The line itself
-            chartsvg.append("path")
-                .datum(zipdata.prices)
-                .attr("class", "line")
-                .attr("d", line);
-            // forecast
-            chartsvg.append("path")
-                .datum(zipdata.forecasts)
-                .attr("class", "forecast")
-                .attr("d", line);
-            // Forecast error space
-            chartsvg.append("path")
-                .datum(zipdata.forecasts)
-                .attr("class", "forecasterror")
-                .attr("d", errorspace);
-        });
-    }
-    
-    //drawchart("11211")
-    
-    d3.json("static/geojson/nyc_zipcta.geojson", function(error, nyc) {
-        var clickhood = function(d, i) {
-            zipname = d.properties.zcta5ce00;
-            $("#hoodinfo").fadeTo(0, 1);
-            $("#hoodname").text(zipname);
-            drawchart(zipname)
-            // $("#boroname").text(d.properties.BoroName);
-            
-            selected = '<div class="selected"> <i style="color: green" class="icon-circle-arrow-up"></i>  <a onclick="(function(e) { e.preventdefault(); drawchart(<%= zip %>); })()"><%= zip %></a> <span style="float: right;"><i class="icon-search"></i> <i class="icon-remove"></i></span> </div>';
-            $("#selectedtray").append(_.template(selected, {zip: zipname}));
-        }
-        var hover = function(d, i){
-            zipname = d.properties.zcta5ce00;
-            if (skippedhood(zipname)) return;
-            d3.select(this)
-                .style("fill", "gray")
-                .style('stroke', 'gray');
-        };
-        var unhover = function(d, i){
-            d3.select(this)
-                .style("fill", "black")
-                .style('stroke', 'black');
-            //$("#hoodinfo").fadeTo(0, 0);
-        };
-        var projection = d3.geo.albers()
-            .translate([-16300, 4100])
-            .scale(56000);
-            // .center([0, 0])
-        group.selectAll('path')
-        .data(nyc.features)
-        .enter().append('path')
-            .attr('d', d3.geo.path().projection(projection))
-            //.attr('id', function(d){return d.properties.name.replace(/\s+/g, '')})
-            .style('fill', 'black')
-            .style('stroke', 'black')
-            .on("mouseover", hover)
-            .on("mouseout", unhover)
-            .on("click", clickhood);
-    });
-
 </script>

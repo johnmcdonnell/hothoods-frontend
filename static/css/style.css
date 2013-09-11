@@ -51,6 +51,26 @@ svg {
     fill: blue;
     opacity: .2;
 }
+
+#map {
+    fill: gray;
+}
+
+.mapselected {
+    opacity: .5;
+    stroke: black;
+    stroke-width: 1px;
+}
+.q8-9 { fill:rgb(215,48,39); }
+.q7-9 { fill:rgb(244,109,67); }
+.q6-9 { fill:rgb(253,174,97); }
+.q5-9 { fill:rgb(254,224,144); }
+.q4-9 { fill:rgb(255,255,191); }
+.q3-9 { fill:rgb(224,243,248); }
+.q2-9 { fill:rgb(171,217,233); }
+.q1-9 { fill:rgb(116,173,209); }
+.q0-9 { fill:rgb(69,117,180); }
+
 #main {
     margin: 10px auto;
     width: 900px;

@@ -1,9 +1,4 @@
 
-var svg = d3.select("#main").insert("svg", "#hoodinfo")
-    .attr("width", 400)
-    .attr("height", 550);
-var group = svg.append('g');
-
 var chartmargin = {top: 20, right: 20, bottom: 90, left: 120},
     chartwidth = 400 - chartmargin.left - chartmargin.right,
     chartheight = 300 - chartmargin.top - chartmargin.bottom;
