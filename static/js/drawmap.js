@@ -1,7 +1,10 @@
 
 var viewpercent = d3.format("+.1p");
-var uparrow = '<i style="color: black" class="icon-circle-arrow-up"></i>'
-var downarrow = '<i style="color: black" class="icon-circle-arrow-down"></i>'
+var uparrow = '<i style="color: black" class="icon-circle-arrow-up"></i>';
+var downarrow = '<i style="color: black" class="icon-circle-arrow-down"></i>';
+
+var trulia_allny = "http://www.trulia.com/for_sale/New_York,NY/x_map/";
+var trulia_zip_template = _.template("http://www.trulia.com/for_sale/<%= zipcode %>_zip/x_map/");
 
 var mapsvg = d3.select("#map").append("svg")
     .attr("id", "map")
@@ -27,6 +30,7 @@ var buildmap = function(error, nyc, mapinfo) {
         $("#hoodname").text(zipname);
         $("#boroname").text("");
         drawchart(zipname);
+        setup_trulia(zipname);
         
         // Box tracking selected neighborhoods. 
         // selectedbox = '<div class="selected"> <i style="color: green" class="icon-circle-arrow-up"></i>  <a onclick="(function(e) { e.preventdefault(); drawchart(<%= zip %>); })()"><%= zip %></a> <span style="float: right;"><i class="icon-search"></i> <i class="icon-remove"></i></span> </div>';
@@ -73,7 +77,14 @@ var buildmap = function(error, nyc, mapinfo) {
             .on("mouseover", hover)
             .on("mouseout", unhover)
             .on("click", clickhood);
+    setup_trulia();
 };
+
+var setup_trulia = function(zipcode) {
+    var url = zipcode ? trulia_zip_template({zipcode: zipcode}) : trulia_allny;
+    console.log(url);
+    $("#truliaframe").attr("src", url);
+}
 
 queue()
     .defer(d3.json, "static/geojson/nyc_zipcta.geojson")
