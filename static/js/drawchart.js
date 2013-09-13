@@ -25,9 +25,9 @@ var errorspace = d3.svg.area()
 
 var drawchart = function(zip) {
     $("#hoodinfo > svg").remove();
-    d3.json("zip/"+zip, function(error, zipdata) {
-        $("#hoodname").append(": " + zipdata.hoodname)
-        $("#boroname").text(zipdata.boroname);
+    //d3.json("zip/"+zip, function(error, zipdata) {
+        //$("#hoodname").append(": " + zipdata.hoodname)
+        //$("#boroname").text(zipdata.boroname);
     var chartsvg = d3.select("#hoodinfo").append("svg")
         .attr("width", chartwidth + chartmargin.left + chartmargin.right)
         .attr("height", chartheight + chartmargin.top + chartmargin.bottom)

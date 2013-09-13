@@ -69,6 +69,15 @@ iframe {
     text-align: center;
 }
 
+.thermo {
+    font-size: 6em;
+    margin-bottom: -.4em;
+}
+
+.rankforecast {
+    font-size: 2em;
+}
+
 .hoodlisthead {
     position: relative;
     bottom: -.75em;
@@ -142,13 +151,18 @@ svg {
 }
 
 #map > svg {
-    fill: gray;
+    fill: #eee;
 }
 
 .mapselected {
     opacity: .5;
     stroke: black;
     stroke-width: 1px;
+}
+
+.activehood {
+    stroke: black;
+    stroke-width: 2px;
 }
 
 // Map color scheme:
