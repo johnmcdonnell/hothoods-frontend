@@ -58,9 +58,20 @@ iframe {
 }
 
 .rank {
+    float: left;
+    margin: 20px 10px 10px;
     border-radius: 50%;
-    width: 200px;
-    height: 200px; 
+    background-color: white;
+    font-size: 2em;
+    width: 50px;
+    height: 50px; 
+    color: rgb(215,48,39);
+    text-align: center;
+}
+
+.hoodlisthead {
+    position: relative;
+    bottom: -.75em;
 }
 
 .listingpic {
