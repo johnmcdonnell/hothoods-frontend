@@ -13,7 +13,7 @@ dbsession = model.SQLSession(user="mcdon", host="localhost", port=3306, db="pric
 
 # Huge query joins many tables to get a summary of each neighborhood: Neighborhood name, The most recent smoothed price estimate, and MLE price forecast.
 summary_query = """
-SELECT hood.ZipCode, hood.neighborhood, price.smoothed, maxpred.mle
+SELECT hood.ZipCode, hood.neighborhood, price.smoothed, minpred.mle, maxpred.mle
 FROM hoodnames hood, (
 	SELECT s.ZipCode, s.smoothed
 	FROM smoothed s
@@ -24,13 +24,22 @@ FROM hoodnames hood, (
 		GROUP BY ZipCode) ss 
 	ON s.date = ss.date AND s.ZipCode = ss.ZipCode
 	) price, (
+	SELECT f.ZipCode, f.mle
+	FROM zipforecasts f
+	INNER JOIN (
+    	SELECT min(time) as time, zipCode, mle
+    	FROM zipforecasts
+    	WHERE mle IS NOT NULL
+        GROUP BY ZipCode) ff 
+        ON f.time = ff.time AND f.ZipCode = ff.ZipCode
+	) minpred, (
 	SELECT f.ZipCode, f.mle  FROM zipforecasts f
 	INNER JOIN (SELECT max(time) as time, ZipCode, mle
     	FROM zipforecasts
     	WHERE mle IS NOT NULL
     	GROUP BY ZipCode) lastdate
 	ON lastdate.time = f.time AND lastdate.ZipCode = f.ZipCode) maxpred
-WHERE hood.ZipCode = price.ZipCode AND hood.ZipCode = maxpred.ZipCode
+WHERE hood.ZipCode = price.ZipCode AND hood.ZipCode = minpred.ZipCode AND hood.ZipCode = maxpred.ZipCode
 """
 
 lastpricequery = """
@@ -99,18 +108,25 @@ def mapinfo():
     # Get name of neighborhood
     hoodnames = dict(query_hoodnames())
     currentprices = dict(dbsession.resolve_query(currentpricequery))
-    summary = dbsession.resolve_query(summary_query)
     ret = []
-    for row in summary:
+    for row in dbsession.resolve_query(summary_query):
         zip = row[0]
         name = row[1].title()
         price = row[2]
-        pred = np.exp(row[3])
-        growth = (pred / price)-1
+        earlypred = np.exp(row[3])
+        pred = np.exp(row[4])
+        growth = (pred / earlypred)-1
+        if zip == '10004':
+            print zip
+            print price
+            print earlypred
+            print pred
+            print growth
         ret.append({
             "zip": zip,
             "hoodname": name,
             "price": price,
+            "earlypred": earlypred,
             "prediction": pred,
             "growth": growth})
     return(jsonify(zips=ret))
@@ -150,6 +166,10 @@ def home():
     """
     Route not found by the other routes above. May point to a static template.
     """
+    hoods = [{"zip": "10009", "houses": [
+        {"src": "http://p.rdcpix.com/v01/lfa275a44-m0s.jpg"}, 
+        {"src": "http://p.rdcpix.com/v01/le8cf4b44-m0s.jpg"}, 
+        {"src": "http://p.rdcpix.com/v01/lb3aa5344-m0s.jpg"}]}]
     return render_template("index.html")
 
 @app.route('/<pagename>')

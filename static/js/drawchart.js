@@ -1,5 +1,5 @@
 
-var chartmargin = {top: 20, right: 20, bottom: 90, left: 120},
+var chartmargin = {top: 20, right: 20, bottom: 90, left: 80},
     chartwidth = 400 - chartmargin.left - chartmargin.right,
     chartheight = 300 - chartmargin.top - chartmargin.bottom;
 var parseDate = d3.time.format("%Y-%m-%d").parse;
@@ -28,11 +28,11 @@ var drawchart = function(zip) {
     d3.json("zip/"+zip, function(error, zipdata) {
         $("#hoodname").append(": " + zipdata.hoodname)
         $("#boroname").text(zipdata.boroname);
-        var chartsvg = d3.select("#hoodinfo").append("svg")
-            .attr("width", chartwidth + chartmargin.left + chartmargin.right)
-            .attr("height", chartheight + chartmargin.top + chartmargin.bottom)
-          .append("g")
-            .attr("transform", "translate(" + chartmargin.left + "," + chartmargin.top + ")");
+    var chartsvg = d3.select("#hoodinfo").append("svg")
+        .attr("width", chartwidth + chartmargin.left + chartmargin.right)
+        .attr("height", chartheight + chartmargin.top + chartmargin.bottom)
+      .append("g")
+        .attr("transform", "translate(" + chartmargin.left + "," + chartmargin.top + ")");
         //zipdata.SaleDate = zipdata.SaleDate.map(parseDate);
         zipdata.forecasts.forEach(function(d) {
             d.date = parseDate(d.date);

@@ -10,23 +10,151 @@
     <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
 </head>
 <body>
-    <div id="header">
-        <div id="headline">
-        <!-- <img id="logo" src="static/images/houseonfire.jpg" alt="hothoods"> -->
-            <h1>
-                <!-- <i class="icon-home"></i>  -->
-            hothoods.info</h1>
-        <p style="float: right; text-align: right; font-style: italic; margin-top: 3em;">A <a href="http://jvmcdonnell.com">
-            jvmcdonnell.com
-        </a> production</p>
+    <div id="header" class="section">
+        <h1>
+            <i class="icon-home"></i>
+        hothoods<span style="color: gray; font-size:.7em;">.info</span></h1>
+        <h2 class="subtitle">Predicting neighborhood trends in housing prices.</h2>
+    </div>
+    <div id="hottest" class="section"> 
+        <div class="pure-g" style="width: 900px; margin: 0 auto;">
+            <div class="pure-u-1">
+                <h2 class="sectionhead"> HOTTEST HOODS</h2>
+            </div>
+            <div class="pure-u-1">
+                <h3 class="hoodlisthead">#1: 10009 Alphabet City</h3>
+            </div>
+            <div class="pure-u-1-4 listingpic" style="text-align: center; color: rgb(215,48,39); ">
+                <div class="wrapper">
+                    <div class="cell">
+                        <i style="font-size: 6em;" class="icon-circle-arrow-up"></i>
+                        <br>
+                        <span style="font-size: 2em;">20%</span>
+                    </div>
+                </div>
+            </div>
+            <div class="pure-u-1-4 listingpic">
+                <img src="http://p.rdcpix.com/v01/lfa275a44-m0s.jpg">
+                2007 Mukilteo Blvd<br>$870,000
+            </div>
+            <div class="pure-u-1-4 listingpic">
+                <img src="http://p.rdcpix.com/v01/le8cf4b44-m0s.jpg">
+                77 Division Ave<br>$1,300,000
+            </div>
+            <div class="pure-u-1-4 listingpic">
+                <img src="http://p.rdcpix.com/v01/lb3aa5344-m0s.jpg">
+                170 Stockholm St.<br>$300,000
+            </div>
+            <div class="pure-u-1">
+                <h3 class="hoodlisthead">#2: 10002 Lower East Side</h3>
+            </div>
+            <div class="pure-u-1-4 listingpic" style="text-align: center; color: rgb(215,48,39);">
+                <div class="wrapper">
+                    <div class="cell">
+                        <i style="font-size: 6em;" class="icon-circle-arrow-up"></i>
+                        <br>
+                        <span style="font-size: 2em;">12%</span>
+                    </div>
+                </div>
+            </div>
+            <div class="pure-u-1-4 listingpic">
+                <img src="http://p.rdcpix.com/v01/lfa275a44-m0s.jpg">
+                2007 Mukilteo Blvd<br>$870,000
+            </div>
+            <div class="pure-u-1-4 listingpic">
+                <img src="http://p.rdcpix.com/v01/le8cf4b44-m0s.jpg">
+                77 Division Ave<br>$1,300,000
+            </div>
+            <div class="pure-u-1-4 listingpic">
+                <img src="http://p.rdcpix.com/v01/lb3aa5344-m0s.jpg">
+                170 Stockholm St.<br>$300,000
+            </div>
+            <div class="pure-u-1">
+                <h3 class="hoodlisthead">#3: 11034 Inwood</h3>
+            </div>
+            <div class="pure-u-1-4 listingpic" style="text-align: center; color: rgb(215,48,39);">
+                <div class="wrapper">
+                    <div class="cell">
+                        <i style="font-size: 6em;" class="icon-circle-arrow-up"></i>
+                        <br>
+                        <span style="font-size: 2em;">12%</span>
+                    </div>
+                </div>
+            </div>
+            <div class="pure-u-1-4 listingpic">
+                <img src="http://p.rdcpix.com/v01/lfa275a44-m0s.jpg">
+                2007 Mukilteo Blvd<br>$870,000
+            </div>
+            <div class="pure-u-1-4 listingpic">
+                <img src="http://p.rdcpix.com/v01/le8cf4b44-m0s.jpg">
+                77 Division Ave<br>$1,300,000
+            </div>
+            <div class="pure-u-1-4 listingpic">
+                <img src="http://p.rdcpix.com/v01/lb3aa5344-m0s.jpg">
+                170 Stockholm St.<br>$300,000
+            </div>
         </div>
     </div>
-    <div id="main">
-        <div id="hoodinfo">
+    <div id="main" class="pure-g section">
+        <div class="pure-u-1">
+            <h2 class="sectionhead">EXPLORE</h2>
+        </div>
+        <div id="map" class="pure-u-1-3">
+            <div id="tooltip" style="display: none;">
+                <h2 id="tooltip-zipcode">zip code </h2>
+                <p><strong><em>HoodHeat</strong></em>: <span id="tooltip-hoodheat"></span></p>
+            </div>
+        </div>
+        <div id="hoodinfo" class="pure-u-1-3">
             <h2 id="hoodname">hothoods.info</h2>
             <p id="boroname"></p>
+            <div id="recommendation">
+                <div style="text-align: center; color: white; background-color: black; width: 15%; margin-right: 10px; float: left;"><i style="font-size: 3em;" class="icon-circle-arrow-up"></i><br>BUY</div>
+                <div style="float: left; width: 80%;">The <strong><em>HoodHeat</em></strong> indicator predicts that prices in this market will increase 8% in the next 12 months.</div>
+            </div>
         </div>
         <div id="selectedtray">
+        </div>
+    </div>
+    <div id="discover" class="section"> 
+        <div class="pure-g" style="width: 900px; margin: 0 auto;">
+            <div class="pure-u-1">
+                <h2 class="sectionhead">DISCOVER</h2>
+            </div>
+            <div class="pure-u-1">
+                <iframe width="900" height="600" src="http://www.trulia.com/for_sale/10009_zip/x_map/">
+                </iframe>
+            </div>
+        </div>
+    </div>
+    <div id="about" class="section footer">
+        <div class="pure-g" style="width: 900px; margin: 0 auto;">
+            <div class="pure-u-1">
+                <h2 class="sectionhead">ABOUT</h2>
+            </div>
+        </div>
+        <div id="aboutgrid" class="pure-g-r">
+            <div class="pure-u-1-5">
+                <!-- <h3>Author</h3> -->
+                <img id="me" src="http://jvmcdonnell.com/images/john_sketch.png"><br>A <a href="http://jvmcdonnell.com"> jvmcdonnell.com </a> production
+            </div>
+            <div class="pure-u-1-3">
+                <!-- <h3>Data</h3> -->
+                <div class="wrapper" style="margin: 0 auto; height: 110px;">
+                    <div class="cell" style="position: relative; left: 16px;">
+                        <img src="http://static.tumblr.com/cfpw6nx/6Oklueuir/screen_shot_2011-11-09_at_3.35.08_pm.png">
+                    </div>
+                </div>
+            </div>
+            <div class="pure-u-1-5">
+                <!-- <h3>Code</h3> -->
+                <p style="text-align: left;">Repositories:</p>
+                <ul id="codelinks">
+                    <li><i class="icon-github"></i> <a href="https://github.com/johnmcdonnell/hothoods-frontend">Web stack</a></p>
+                    <li><i class="icon-github"></i> <a href="https://github.com/johnmcdonnell/hothoods_analytics">Analytics</a></p>
+                    <li><i class="icon-github"></i> <a href="https://github.com/johnmcdonnell/hothoods-backend">Data shaping</a></p>
+                </ul>
+            </div>
         </div>
     </div>
 <script src="static/js/underscore.js"></script>

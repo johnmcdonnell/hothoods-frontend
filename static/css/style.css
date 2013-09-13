@@ -1,33 +1,98 @@
 
-@import url(http://fonts.googleapis.com/css?family=Oxygen);
-@import url(http://fonts.googleapis.com/css?family=Ceviche+One);
+@import url(http://fonts.googleapis.com/css?family=Ubuntu);
 
+
+body,
+.pure-g [class *= "pure-u"],
+.pure-g-r [class *= "pure-u"] {
+    font-family: Ubuntu, "Helvetica Neue";
+}
 body {
-    font-family: Oxygen, "Helvetica Neue";
     // background-color: black;
-    margin: 0 auto;
+    // margin: 0 auto;
+    text-align: center;
     // width: 900px;
     // background-image:url('static/images/damask.jpg');
 }
 h1 {
-    font-size: 2.8em;
-    margin: 18px;
-    float: left;
-    font-family: 'Ceviche One', sans-serif;
-    // color: #00ff00;
+    font-size: 5em;
+    font-family: Ubuntu, Arvo, 'Ceviche One', sans-serif;
+    margin-bottom: 0;
+}
+.subtitle {
+    color: rgb(215,48,39);
+    margin-top: 0;
+    font-weight: 300;
 }
 a {
     color: #aaa;
 }
-#header {
-    background-color: black;
-    color: white;
-    overflow: hidden;
-    //margin-top: 10px;
+iframe {
+    border: none;
 }
-#headline {
-    width: 900px;
+.wrapper {
+    display: table;
+    height: 100%;
     margin: 0 auto;
+}
+.cell {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+#hottest {
+    background-color: rgb(215,48,39);
+    color: white;
+    padding: 2em;
+    text-align: left;
+    padding: 0 auto;
+}
+
+#hottest img {
+    width: 100%;
+}
+
+.listingpic {
+    background-color: white;
+    color: gray;
+    height: 200px; 
+}
+
+#discover {
+    background-color: rgb(69,117,180);
+    color: white;
+    padding: 2em;
+    text-align: left;
+    padding: 0 auto;
+}
+
+
+#me {
+    height: 80px;
+}
+
+#aboutgrid {
+    margin: 0 auto;
+}
+#codelinks {
+    text-align: left;
+    list-style-type: none;
+}
+#tooltip {
+    position: absolute;
+    border: 3px solid black;
+    padding: 10px;
+    width: 8.5em;
+    height: 5em;
+}
+.sectionhead {
+    font-size: 2em;
+    letter-spacing: .2em;
+    text-align: center;
+}
+#tooltip h2 {
+    margin: 5px;
+    font-size: 1.8em;
 }
 svg {
     float: left;
@@ -44,7 +109,9 @@ svg {
 }
 .forecast {
     fill: none;
-    stroke: red;
+    stroke: black;
+    stroke-linecap: round;
+    stroke-dasharray: 1,4;
     stroke-width: 3px;
 }
 .forecasterror {
@@ -52,7 +119,7 @@ svg {
     opacity: .2;
 }
 
-#map {
+#map > svg {
     fill: gray;
 }
 
@@ -71,11 +138,17 @@ svg {
 .q1-9 { fill:rgb(116,173,209); }
 .q0-9 { fill:rgb(69,117,180); }
 
-#main {
+.section{
     margin: 10px auto;
-    width: 900px;
-    background-color: white;
-    overflow: hidden;
+    // width: 900px;
+    // border-bottom: 1px solid #eee;
+    padding-bottom: 20px;
+}
+.footer {
+    border: none;
+}
+
+#main {
 }
 #logo {
     position: relative;
@@ -88,18 +161,24 @@ svg {
     //border: 2px solid black;
     color: black;
     background-color: white;
-    width: 400px;
+    width: 410px;
     height: 370px;
-    float: left;
     padding: 10px;
     margin: 10px;
+    text-align: left;
 }
 #hoodname {
     height: 1em;
+    margin: 0;
 }
 #boroname {
     text: gray;
     font-style: italic;
+    margin-top: 0;
+}
+#recommendation {
+    border: 3px solid black;
+    overflow: hidden;
 }
 #selectedtray {
     width: 500px;

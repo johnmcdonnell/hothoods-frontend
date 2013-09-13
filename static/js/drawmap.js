@@ -1,5 +1,9 @@
 
-var mapsvg = d3.select("#main").insert("svg", "#hoodinfo")
+var viewpercent = d3.format("+.1p");
+var uparrow = '<i style="color: black" class="icon-circle-arrow-up"></i>'
+var downarrow = '<i style="color: black" class="icon-circle-arrow-down"></i>'
+
+var mapsvg = d3.select("#map").append("svg")
     .attr("id", "map")
     .attr("width", 400)
     .attr("height", 550);
@@ -37,16 +41,22 @@ var buildmap = function(error, nyc, mapinfo) {
         if (skippedhood(zipname)) return;
         d3.select(this)
             .classed("mapselected", true);
+        var growth =  growthbyzip.get(zipname);
+        arrow = growth > 0 ? uparrow : downarrow;
+        $("#tooltip h2").text("");
+        $("#tooltip h2").append(arrow + " " + zipname );
+        $("#tooltip-hoodheat").text(viewpercent(growth));
+        $("#tooltip").show();
     };
     var unhover = function(d, i){
         d3.select(this)
             .classed("mapselected", false);
         //$("#hoodinfo").fadeTo(0, 0);
+        $("#tooltip").hide();
     };
     var quantizegrowth = d3.scale.quantize()
-        // HACK! 
-        .domain([d3.min(growthbyzip.values())/3, d3.max(growthbyzip.values())/2])
-        .range(d3.range(9).map(function(i) { return "q" + i + "-9"; }));
+        .domain([-d3.max(growthbyzip.values())*.8, d3.max(growthbyzip.values())*.8])
+        .range(d3.range(8).map(function(i) { return "q" + i + "-9"; }));
     
     var projection = d3.geo.albers()
         .translate([-16300, 4100])
