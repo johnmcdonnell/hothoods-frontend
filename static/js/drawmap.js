@@ -1,7 +1,8 @@
 
+// TODO: Encapsulate.
 var viewpercent = d3.format("+.1p");
-var uparrow = '<i style="color: black" class="icon-circle-arrow-up"></i>';
-var downarrow = '<i style="color: black" class="icon-circle-arrow-down"></i>';
+var uparrow = '<i class="ss-icon"></i>';
+var downarrow = '<i class="ss-icon"></i>';
 
 var trulia_allny = "http://www.trulia.com/for_sale/New_York,NY/x_map/";
 var trulia_zip_template = _.template("http://www.trulia.com/for_sale/<%= zipcode %>_zip/x_map/");
@@ -13,7 +14,7 @@ var mapsvg = d3.select("#map").append("svg")
     .attr("width", mapwidth)
     .attr("height", mapheight);
 var mapgroup = mapsvg.append('g');
-var centered;
+var centered = null;
 
 selected = [];
 
@@ -22,6 +23,26 @@ var growthbyzip = d3.map(),
     hoodnamebyzip = d3.map(),
     mediangrowth;
 
+var update_rec = function(zipname) {
+    if (growthbyzip.get(zipname) > mediangrowth) {
+        therm = uparrow;
+        thermclass = "hot";
+        word = "BUY";
+        explain = "Prices rising faster than city median.";
+    } else {
+        therm = downarrow;
+        thermclass = "cold";
+        word = "Don't Buy";
+        explain = "Prices rising slower than city median.";
+    }
+    $("#recword").text(word);
+    $("#recexplain").text(explain);
+    $("#recommendation").removeClass("hot cold").addClass(thermclass);
+    $hoodinfo.find("#recthermo")
+        .text("")
+        .append(therm);
+    }
+
 var buildmap = function(error, nyc, mapinfo) {
     mapinfo.zips.forEach(function(d) {
         growthbyzip.set(d.zip, +d.growth);
@@ -29,22 +50,31 @@ var buildmap = function(error, nyc, mapinfo) {
         hoodnamebyzip.set(d.zip, d.hoodname);
     });
     mediangrowth = d3.median(growthbyzip.values());
+    var skippedhood = function(name) {
+        // Return True if we don't have enough data to visualize.
+        return growthbyzip.get(name) === undefined;
+    };
     var clickhood = function(d, i) {
         var zipname = d.properties.zcta5ce00;
+        $("#hoodname").text(hoodnamebyzip.get(zipname));
+        $("#hoodname").text(hoodnamebyzip.get(zipname));
         if (skippedhood(zipname)) return;
         if (d && centered !==d) {
-            var centroid = path.centroid(d);
-            x = centroid[0];
-            y = centroid[1];
-            k = 4;
-            console.log(nycscale);
-            console.log(k);
+            var centroid = path.centroid(d),
+                x = centroid[0];
+                y = centroid[1];
+                k = 3;
             centered = d;
+            $("#downarrow").fadeTo(0, 1);
+            setup_trulia(zipname);
         } else {
-            x = mapwidth/2;
-            y = mapheight/2;
-            k = 1;
+            var x = mapwidth/2,
+                y = mapheight/2,
+                k = 1;
             centered = null;
+            $("#downarrow").fadeTo(0, 0);
+            $("#hoodinfo > svg").remove()
+            setup_trulia();
         }
         mapgroup.selectAll("path")
             .classed("activehood", centered && function(d) { return d === centered; });
@@ -53,24 +83,21 @@ var buildmap = function(error, nyc, mapinfo) {
             .duration(750)
             .attr("transform", "translate(" + mapwidth/2 + "," + mapheight/2 + ")scale(" + k + ")translate(" + -x + "," + -y + ")")
             .style("stroke-width", 1.5 / k + "px");
-        // drawchart(zipname);
-        // setup_trulia(zipname);
-        
-        // Box tracking selected neighborhoods. 
-        // selectedbox = '<div class="selected"> <i style="color: green" class="icon-circle-arrow-up"></i>  <a onclick="(function(e) { e.preventdefault(); drawchart(<%= zip %>); })()"><%= zip %></a> <span style="float: right;"><i class="icon-search"></i> <i class="icon-remove"></i></span> </div>';
-        // $("#selectedtray").append(_.template(selectedbox, {zip: zipname}));
-    };
-    var skippedhood = function(name) {
-        // Return True if we don't have enough data to visualize.
-        return growthbyzip.get(name) === undefined;
+        drawchart(zipname);
     };
     var hover = function(d, i){
         zipname = d.properties.zcta5ce00;
         if (skippedhood(zipname)) return;
         d3.select(this).classed("mapselected", true);
-        $("#hoodinfo").fadeTo(0, 1);
-        $("#hoodname").text(hoodnamebyzip.get(zipname));
-        $("#boroname").text("");
+        if (centered === null) {
+            $hoodinfo = $("#hoodinfo");
+            $hoodinfo.find("svg").remove(); // TODO Shouldn't this just work when you 'unclick?
+            $hoodinfo.fadeTo(0, 1);
+            $("#hoodname").text(hoodnamebyzip.get(zipname));
+            // $("#boroname").text(zipdata.boroname);
+            $("#boroname").text("");
+            update_rec(zipname);
+        }
         // var growth =  growthbyzip.get(zipname);
         // var arrow = growth > 0 ? uparrow : downarrow;
         // $("#tooltip h2").text("");
@@ -79,10 +106,10 @@ var buildmap = function(error, nyc, mapinfo) {
         // $("#tooltip").show();
     };
     var unhover = function(d, i){
-        d3.select(this)
-            .classed("mapselected", false);
-        $("#hoodinfo").fadeTo(0, 0);
-        $("#tooltip").hide();
+        d3.select(this).classed("mapselected", false);
+        if (centered === null) {
+            $("#hoodinfo").fadeTo(0, 0);
+        }
     };
     var quantizegrowth = d3.scale.quantize()
         .domain([-d3.max(growthbyzip.values())*.8, d3.max(growthbyzip.values())*.8])
@@ -111,7 +138,7 @@ var buildmap = function(error, nyc, mapinfo) {
 
 var setup_trulia = function(zipcode) {
     var url = zipcode ? trulia_zip_template({zipcode: zipcode}) : trulia_allny;
-    //$("#truliaframe").attr("src", url);
+    $("#truliaframe").attr("src", url);
 }
 
 queue()
