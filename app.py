@@ -172,6 +172,15 @@ def home():
         {"src": "http://p.rdcpix.com/v01/lb3aa5344-m0s.jpg"}]}]
     return render_template("index.html")
 
+@app.route('/robots.txt')
+def robotstxt():
+    response = """
+    User-agent: *
+    Disallow:
+    """
+    return response
+
+
 @app.route('/<pagename>')
 def regularpage(pagename=None):
     """
