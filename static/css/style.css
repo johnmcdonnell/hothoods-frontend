@@ -54,7 +54,6 @@ iframe {
     background-color: rgb(215,48,39);
     color: white;
     padding: 2em;
-    text-align: left;
     padding: 0 auto;
 }
 
@@ -85,14 +84,22 @@ iframe {
     font-size: 2em;
 }
 
+.hoodrankbar {
+    margin-top: 20px;
+}
+
 .hoodlisthead {
     position: relative;
-    bottom: -.75em;
+    font-size: 2em;
+    bottom: .16em;
+    margin-bottom: .5em;
+    text-align: left;
 }
 
 .rankzip {
     color: #ccc;
     font-size: .8em;
+    margin-left: .2em;
 }
 
 .listingpic {
