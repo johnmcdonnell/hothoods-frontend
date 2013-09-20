@@ -56,10 +56,9 @@ var buildmap = function(error, nyc, mapinfo) {
     };
     var clickhood = function(d, i) {
         var zipname = d.properties.zcta5ce00;
-        $("#hoodname").text(hoodnamebyzip.get(zipname));
-        $("#hoodname").text(hoodnamebyzip.get(zipname));
         if (skippedhood(zipname)) return;
-        if (d && centered !==d) {
+        if (d && centered === null) {
+            // Zoom into clicked item
             var centroid = path.centroid(d),
                 x = centroid[0];
                 y = centroid[1];
@@ -68,12 +67,14 @@ var buildmap = function(error, nyc, mapinfo) {
             $("#downarrow").fadeTo(0, 1);
             setup_trulia(zipname);
         } else {
+            // Zoom out
             var x = mapwidth/2,
                 y = mapheight/2,
                 k = 1;
             centered = null;
             $("#downarrow").fadeTo(0, 0);
             $("#hoodinfo > svg").remove()
+            d3.select(".mapselected").classed("mapselected", false);
             setup_trulia();
         }
         mapgroup.selectAll("path")
@@ -88,26 +89,21 @@ var buildmap = function(error, nyc, mapinfo) {
     var hover = function(d, i){
         zipname = d.properties.zcta5ce00;
         if (skippedhood(zipname)) return;
-        d3.select(this).classed("mapselected", true);
         if (centered === null) {
+            d3.select(this).classed("mapselected", true);
             $hoodinfo = $("#hoodinfo");
             $hoodinfo.find("svg").remove(); // TODO Shouldn't this just work when you 'unclick?
             $hoodinfo.fadeTo(0, 1);
             $("#hoodname").text(hoodnamebyzip.get(zipname));
+            $("#zip").text(zipname);
             // $("#boroname").text(zipdata.boroname);
             $("#boroname").text("");
             update_rec(zipname);
         }
-        // var growth =  growthbyzip.get(zipname);
-        // var arrow = growth > 0 ? uparrow : downarrow;
-        // $("#tooltip h2").text("");
-        // $("#tooltip h2").append(arrow + " " + zipname );
-        // $("#tooltip-hoodheat").text(viewpercent(growth));
-        // $("#tooltip").show();
     };
     var unhover = function(d, i){
-        d3.select(this).classed("mapselected", false);
         if (centered === null) {
+            d3.select(this).classed("mapselected", false);
             $("#hoodinfo").fadeTo(0, 0);
         }
     };

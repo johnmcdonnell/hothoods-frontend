@@ -170,6 +170,19 @@ svg {
     opacity: .2;
 }
 
+#tophoods {
+    text-align: left;
+    color: white;
+}
+.tophood {
+    background-color: rgb(215,48,39);
+    //font-size: 2em;
+    border-radius: 2em;
+    padding: .5em;
+    margin: .5em;
+    height: 1em;
+}
+
 #map > svg {
     fill: #eee;
 }
