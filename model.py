@@ -11,6 +11,9 @@ class SQLSession:
         self.db = MySQLdb.connect(*args, **kwargs)
         self.c = self.db.cursor()
     
+    def close(self):
+        self.db.close()
+    
     def resolve_query(self, query, maxrows=0):
         """
         Return an iterator with results from the query.

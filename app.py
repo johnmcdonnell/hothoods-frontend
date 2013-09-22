@@ -1,15 +1,29 @@
 import os
 from datetime import datetime as dt
 from dateutil.relativedelta import relativedelta
-from flask import Flask, render_template, jsonify
+from flask import Flask, g, render_template, jsonify
 import numpy as np
 #import pandas
 #from pandas.io.sql import read_sql
 
+app = Flask("hothoods", template_folder=os.path.join(os.curdir, "templates"))
+
+@app.before_request
+def db_connect():
+    """
+    Create a db session after a new connection.
+    """
+    g.dbsession = model.SQLSession(user="mcdon", host="localhost", port=3306, db="prices")
+
+@app.teardown_request
+def db_disconnect(exception=None):
+    """
+    Close db session when connection is closed.
+    """
+    g.dbsession.close();
+
 import model
 
-app = Flask("PsiTurk", template_folder=os.path.join(os.curdir, "templates"))
-dbsession = model.SQLSession(user="mcdon", host="localhost", port=3306, db="prices")
 
 # Huge query joins many tables to get a summary of each neighborhood: Neighborhood name, The most recent smoothed price estimate, and MLE price forecast.
 summary_query = """
@@ -63,7 +77,7 @@ def query_hoodnames(zip=None):
         hoodnamequery += ";"
     
     ret = {}
-    for results in dbsession.resolve_query(hoodnamequery):
+    for results in g.dbsession.resolve_query(hoodnamequery):
         ret[results[0]] = results[1].title()
     return ret
 
@@ -71,7 +85,7 @@ def query_borough(zip):
     boroquery = """
         SELECT Borough FROM sales 
         WHERE ZipCode={zipcode} LIMIT 1""".format(zipcode=zip)
-    return dbsession.resolve_query(boroquery)[0][0]
+    return g.dbsession.resolve_query(boroquery)[0][0]
 
 zipquery = """
 SELECT 
@@ -107,9 +121,9 @@ def mapinfo():
     """
     # Get name of neighborhood
     hoodnames = dict(query_hoodnames())
-    currentprices = dict(dbsession.resolve_query(currentpricequery))
+    currentprices = dict(g.dbsession.resolve_query(currentpricequery))
     ret = []
-    for row in dbsession.resolve_query(summary_query):
+    for row in g.dbsession.resolve_query(summary_query):
         zip = row[0]
         name = row[1].title()
         price = row[2]
@@ -147,7 +161,7 @@ def ziptrend(zipcode=None):
     
     # Get price history
     history = []
-    for row in dbsession.resolve_query(zipquery.format(zipcode=zipcode)):
+    for row in g.dbsession.resolve_query(zipquery.format(zipcode=zipcode)):
         history.append({"date": row[0], "price": float(row[1])})
         lasttime = row[0]
         lastprice = float(row[1])
@@ -156,7 +170,7 @@ def ziptrend(zipcode=None):
     if lasttime:
         dateformat = "%Y-%m-%d"
         forecasts = [{"date": lasttime, "price": lastprice, "lo80": lastprice, "hi80": lastprice}]
-        for row in dbsession.resolve_query(forecastquery.format(zipcode=zipcode)):
+        for row in g.dbsession.resolve_query(forecastquery.format(zipcode=zipcode)):
             forecasttime = dt.strptime(lasttime, dateformat) + relativedelta(months=row[0])
             forecasts.append({"date": dt.strftime(forecasttime, dateformat), "price": np.exp(float(row[1])), "lo80": np.exp(float(row[2])), "hi80": np.exp(float(row[3]))})
         return(jsonify(boroname=boroname, hoodname=hoodname, prices=history, forecasts=forecasts))
