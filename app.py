@@ -166,10 +166,6 @@ def home():
     """
     Route not found by the other routes above. May point to a static template.
     """
-    hoods = [{"zip": "10009", "houses": [
-        {"src": "http://p.rdcpix.com/v01/lfa275a44-m0s.jpg"}, 
-        {"src": "http://p.rdcpix.com/v01/le8cf4b44-m0s.jpg"}, 
-        {"src": "http://p.rdcpix.com/v01/lb3aa5344-m0s.jpg"}]}]
     return render_template("index.html")
 
 @app.route('/robots.txt')

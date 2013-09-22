@@ -43,9 +43,7 @@ var update_rec = function(zipname) {
         .append(therm);
     }
 
-var mapinfo;
-var buildmap = function(error, nyc, info) {
-    mapinfo = info;
+var buildmap = function(error, nyc, mapinfo) {
     mapinfo.zips.forEach(function(d) {
         growthbyzip.set(d.zip, +d.growth);
         pricebyzip.set(d.zip, +d.price);
