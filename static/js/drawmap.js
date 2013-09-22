@@ -58,6 +58,7 @@ var buildmap = function(error, nyc, mapinfo) {
         var zipname = d.properties.zcta5ce00;
         if (skippedhood(zipname)) return;
         if (d && centered === null) {
+            $(".maphood").css("cursor", "-webkit-zoom-out").css("cursor", "-moz-zoom-out").css("cursor", "zoom-out");
             // Zoom into clicked item
             var centroid = path.centroid(d),
                 x = centroid[0];
@@ -69,6 +70,7 @@ var buildmap = function(error, nyc, mapinfo) {
             setup_trulia(zipname);
         } else {
             // Zoom out
+            $(".maphood").css("cursor", "-webkit-zoom-in").css("cursor", "-moz-zoom-in").css("cursor", "zoom-in");
             var x = mapwidth/2,
                 y = mapheight/2,
                 k = 1;
@@ -122,11 +124,8 @@ var buildmap = function(error, nyc, mapinfo) {
     mapgroup.selectAll('path')
         .data(nyc.features)
         .enter().append('path')
-            .attr("class", function(d) { return quantizegrowth(growthbyzip.get(d.properties.zcta5ce00)); })
+            .attr("class", function(d) { return quantizegrowth(growthbyzip.get(d.properties.zcta5ce00)) + " maphood"; })
             .attr('d', path)
-            //.attr('id', function(d){return d.properties.name.replace(/\s+/g, '')})
-            // .style('fill', 'black')
-            // .style('stroke', 'black')
             .on("mouseover", hover)
             .on("mouseout", unhover)
             .on("click", clickhood);

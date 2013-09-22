@@ -215,6 +215,11 @@ svg {
     fill: #eee;
 }
 
+
+.maphood {
+    cursor: -webkit-zoom-in; cursor: -moz-zoom-in; cursor: zoom-in;
+}
+
 .maphover {
     opacity: .5;
     stroke: black;

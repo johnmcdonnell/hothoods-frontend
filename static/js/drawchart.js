@@ -45,7 +45,7 @@ var drawchart = function(zip) {
             d.price = +d.price;
         })
         chartx.domain(d3.extent(zipdata.prices.concat(zipdata.forecasts), function(d) { return d.date; }));
-        charty.domain([80,1600]); //d3.extent(zipdata.prices, function(d) { return d.ppsqft; }));
+        charty.domain([80,2048]); //d3.extent(zipdata.prices, function(d) { return d.ppsqft; }));
         
         // x-axis
         chartsvg.append("g")
