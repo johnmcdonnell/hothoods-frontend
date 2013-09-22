@@ -43,7 +43,9 @@ var update_rec = function(zipname) {
         .append(therm);
     }
 
-var buildmap = function(error, nyc, mapinfo) {
+var mapinfo;
+var buildmap = function(error, nyc, info) {
+    mapinfo = info;
     mapinfo.zips.forEach(function(d) {
         growthbyzip.set(d.zip, +d.growth);
         pricebyzip.set(d.zip, +d.price);
@@ -64,6 +66,7 @@ var buildmap = function(error, nyc, mapinfo) {
                 y = centroid[1];
                 k = 3;
             centered = d;
+            d3.select(this).classed("maphover", false);
             $("#downarrow").fadeTo(0, 1);
             setup_trulia(zipname);
         } else {
@@ -74,7 +77,7 @@ var buildmap = function(error, nyc, mapinfo) {
             centered = null;
             $("#downarrow").fadeTo(0, 0);
             $("#hoodinfo > svg").remove()
-            d3.select(".mapselected").classed("mapselected", false);
+            d3.select(".maphover").classed("maphover", false);
             setup_trulia();
         }
         mapgroup.selectAll("path")
@@ -90,7 +93,7 @@ var buildmap = function(error, nyc, mapinfo) {
         zipname = d.properties.zcta5ce00;
         if (skippedhood(zipname)) return;
         if (centered === null) {
-            d3.select(this).classed("mapselected", true);
+            d3.select(this).classed("maphover", true);
             $hoodinfo = $("#hoodinfo");
             $hoodinfo.find("svg").remove(); // TODO Shouldn't this just work when you 'unclick?
             $hoodinfo.fadeTo(0, 1);
@@ -103,7 +106,7 @@ var buildmap = function(error, nyc, mapinfo) {
     };
     var unhover = function(d, i){
         if (centered === null) {
-            d3.select(this).classed("mapselected", false);
+            d3.select(this).classed("maphover", false);
             $("#hoodinfo").fadeTo(0, 0);
         }
     };
