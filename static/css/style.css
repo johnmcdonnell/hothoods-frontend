@@ -129,13 +129,6 @@ iframe {
     text-align: left;
     list-style-type: none;
 }
-#tooltip {
-    position: absolute;
-    border: 3px solid black;
-    padding: 10px;
-    width: 8.5em;
-    height: 5em;
-}
 .sectionhead {
     font-size: 2em;
     letter-spacing: .2em;
@@ -166,7 +159,7 @@ svg {
     stroke-width: 3px;
 }
 .forecasterror {
-    fill: blue;
+    fill: black;
     opacity: .2;
 }
 
