@@ -70,6 +70,13 @@ var drawchart = function(zip) {
             .style("text-anchor", "end")
             .text("Price / sq.ft.");
         
+        chartsvg.append("g")
+          .append("text")
+            .attr("y", 260)
+            .style("fill", "gray")
+            .style("font-style", "italic")
+            .text("Gray denotes uncertainty in price forecast.");
+        
         // The line itself
         chartsvg.append("path")
             .datum(zipdata.prices)
