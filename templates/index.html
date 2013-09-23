@@ -11,7 +11,7 @@
     <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
 </head>
 <body>
-    <div id="nav">
+    <div id="nav" class="pure-hidden-phone pure-hidden-tablet">
         <a href="#hottest" class="navitem redback">
             <i class="icon-trophy"></i>
         </a>
@@ -33,14 +33,11 @@
     <div id="hottest" class="section"> 
         <h2 class="sectionhead">TOP NEIGHBORHOODS</h2>
         <p style="margin-bottom: 0;">These neighborhoods ranked the highest in future growth potential.</p>
-        <div class="pure-g" style="width: 900px; margin: 20px auto;">
+        <div class="pure-g" style="width: 80%; margin: 20px auto;">
             {% for hood in listings %}
-            <div class="pure-u-3-4 hoodrankbar">
+            <div class="pure-u-1 hoodrankbar">
                 <div class="rank"><div class="wrapper"><div class="cell">{{ loop.index }}</div></div></div>
-                <h3 class="hoodlisthead">{{ hood.hoodname }}</h3>
-            </div>
-            <div class="pure-u-1-4 hoodrankbar">
-                <h3 class="rankzip" >ZIP {{ hood.zipcode }}</h3>
+                <h3 class="hoodlisthead">{{ hood.hoodname }} <span class="rankzip">ZIP {{ hood.zipcode }}</span></h3>
             </div>
             <div class="pure-u-1-4 listingbox starmap">
                 <img src="{{ hood.mapurl -}}">
@@ -74,7 +71,7 @@
     <div id="explore" class="section">
         <h2 class="sectionhead">EXPLORE</h2>
         <p style="text-align: center;">Click on a neighborhood to learn more about its price trends.</p>
-        <div class="pure-g section">
+        <div class="pure-g-r section">
             <div id="map" class="pure-u-1-4">
             </div>
             <div id="hoodinfo" class="pure-u-1-2">

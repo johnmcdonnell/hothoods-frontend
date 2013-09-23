@@ -61,7 +61,8 @@ iframe {
 }
 
 #hottest img {
-    width: 200px;
+    width: 90%;
+    height: 80%;
     height: 140px;
     margin: 10px auto 0;
     clear: both;
@@ -113,11 +114,9 @@ iframe {
 
 .rankzip {
     position: relative;
-    font-size: 2em;
-    bottom: .23em;
+    font-size: .8em;
     margin-bottom: 0;
     color: #ccc;
-    text-align: right;
 }
 
 .redborder {
@@ -143,6 +142,7 @@ iframe {
     width: 225px;
     margin-bottom: 20px;
     border: 5px solid rgb(215,48,39);
+    padding-bottom: 1em;
 }
 
 #discover {
