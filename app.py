@@ -171,11 +171,15 @@ def ziptrend(zipcode=None):
     # Get forecast
     if lasttime:
         dateformat = "%Y-%m-%d"
-        forecasts = [{"date": lasttime, "price": lastprice, "lo80": lastprice, "hi80": lastprice}]
-        for row in g.dbsession.resolve_query(forecastquery.format(zipcode=zipcode)):
-            forecasttime = dt.strptime(lasttime, dateformat) + relativedelta(months=row[0])
+        forecasts = []
+        #forecasts = [{"date": lasttime, "price": lastprice, "lo80": lastprice, "hi80": lastprice}]
+        forecast_query = g.dbsession.resolve_query(forecastquery.format(zipcode=zipcode))
+        junctiontime = dt.strptime(lasttime, dateformat) + relativedelta(months=forecast_query[0][0])
+        history.append({"date": dt.strftime(junctiontime, dateformat), "price": np.exp(float(forecast_query[0][1]))})
+        for row in forecast_query:
+            forecasttime = dt.strptime(lasttime, dateformat) + relativedelta(months=row[0]+1)
             forecasts.append({"date": dt.strftime(forecasttime, dateformat), "price": np.exp(float(row[1])), "lo80": np.exp(float(row[2])), "hi80": np.exp(float(row[3]))})
-        return(jsonify(boroname=boroname, hoodname=hoodname, prices=history, forecasts=forecasts))
+    return(jsonify(boroname=boroname, hoodname=hoodname, prices=history, forecasts=forecasts))
 
 @app.route('/')
 def home():
