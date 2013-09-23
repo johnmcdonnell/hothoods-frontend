@@ -1,8 +1,10 @@
 
 // TODO: Encapsulate.
-var viewpercent = d3.format("+.1p");
+var viewpercent = d3.format("+0%");
 var uparrow = '<i class="ss-icon"></i>';
 var downarrow = '<i class="ss-icon"></i>';
+var thermometer_template = _.template('<i class="ss-icon"><%= thermo %></i>')
+var thermometers = ["", "", "", "", ""];
 
 var trulia_allny = "http://www.trulia.com/for_sale/New_York,NY/x_map/";
 var trulia_zip_template = _.template("http://www.trulia.com/for_sale/<%= zipcode %>_zip/x_map/");
@@ -24,19 +26,23 @@ var growthbyzip = d3.map(),
     mediangrowth;
 
 var update_rec = function(zipname) {
+    var quantizethermometer = d3.scale.quantize()
+        .domain([d3.min(growthbyzip.values()), d3.max(growthbyzip.values())])
+        .range(d3.range(5).map(function(i) { return thermometer_template({thermo: thermometers[i]}); }));
+    
+    therm = quantizethermometer(growthbyzip.get(zipname))
     if (growthbyzip.get(zipname) > mediangrowth) {
-        therm = uparrow;
         thermclass = "hot";
         word = "BUY";
         explain = "Prices rising faster than city median.";
     } else {
-        therm = downarrow;
         thermclass = "cold";
         word = "Don't Buy";
         explain = "Prices rising slower than city median.";
     }
     $("#recword").text(word);
     $("#recexplain").text(explain);
+    $("#recestimate").text(viewpercent(growthbyzip.get(zipname)));
     $("#recommendation").removeClass("hot cold").addClass(thermclass);
     $hoodinfo.find("#recthermo")
         .text("")
@@ -110,10 +116,6 @@ var buildmap = function(error, nyc, mapinfo) {
             $("#hoodinfo").fadeTo(0, 0);
         }
     };
-    var quantizegrowth = d3.scale.quantize()
-        .domain([-d3.max(growthbyzip.values())*.8, d3.max(growthbyzip.values())*.8])
-        .range(d3.range(8).map(function(i) { return "q" + i + "-9"; }));
-    
     var nyccenter = [-21450, 5300];
     var nycscale = 73000;
     var projection = d3.geo.albers()
@@ -121,6 +123,9 @@ var buildmap = function(error, nyc, mapinfo) {
         .scale(nycscale);
         // .center([0, 0])
     var path = d3.geo.path().projection(projection);
+    var quantizegrowth = d3.scale.quantize()
+        .domain([-d3.max(growthbyzip.values())*.8, d3.max(growthbyzip.values())*.8])
+        .range(d3.range(8).map(function(i) { return "q" + i + "-9"; }));
     mapgroup.selectAll('path')
         .data(nyc.features)
         .enter().append('path')

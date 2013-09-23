@@ -315,7 +315,7 @@ svg {
 }
 #recthermo {
     float: left;
-    font-size: 3.5em;
+    font-size: 4em;
 }
 .hot > #recthermo{
     color: rgb(215,48,39);
