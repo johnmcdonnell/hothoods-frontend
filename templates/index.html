@@ -34,23 +34,24 @@
         <h2 class="sectionhead">TOP NEIGHBORHOODS</h2>
         <p style="margin-bottom: 0;">These neighborhoods ranked the highest in future growth potential.</p>
         <div class="pure-g" style="width: 900px; margin: 20px auto;">
+            {% for hood in listings %}
             <div class="pure-u-3-4 hoodrankbar">
-                <div class="rank"><div class="wrapper"><div class="cell">1</div></div></div>
-                <h3 class="hoodlisthead">Flatiron </h3>
+                <div class="rank"><div class="wrapper"><div class="cell">{{ loop.index }}</div></div></div>
+                <h3 class="hoodlisthead">{{ hood.hoodname }}</h3>
             </div>
             <div class="pure-u-1-4 hoodrankbar">
-                <h3 class="rankzip" >ZIP 10010</h3>
+                <h3 class="rankzip" >ZIP {{ hood.zipcode }}</h3>
             </div>
             <div class="pure-u-1-4 listingbox starmap">
-                <img src="static/images/flatiron.png">
-                <span class="caption">MANHATTAN</span>
+                <img src="{{ hood.mapurl -}}">
+                <span class="caption">{{ hood.borough }}</span>
             </div>
             <div class="pure-u-1-4 listingbox" style="text-align: center; color: rgb(215,48,39); ">
                 <div class="wrapper metric">
                     <div class="cell">
-                        <div class="thermo"><i class="ss-icon"></i></div>
+                        <div class="thermo"><i class="ss-icon">{{ hood.forecast_icon }}</i></div>
                         <br>
-                        <span class="rankforecast">+18%</span>
+                        <span class="rankforecast">{{ hood.forecast }}</span>
                     </div>
                 </div>
                 <span class="caption">12-month Forecast</span>
@@ -58,82 +59,16 @@
             <div class="pure-u-1-4 listingbox" style="text-align: center; color: rgb(215,48,39); ">
                 <div class="wrapper metric">
                     <div class="cell">
-                        <span class="price">$790k</span>
+                        <span class="price">{{ hood.median_price }}</span>
                     </div>
                 </div>
                 <span class="caption">Median Price: 1.2k sqft</span>
             </div>
             <div class="pure-u-1-4 listingbox">
-                <img src="http://p.rdcpix.com/v01/l8a246144-m1x.jpg">
-                <br>25 N Moore St Ph B<br>$5,400,000
+                <img src="{{ hood.listing_photo_url -}}">
+                <br><a target="_blank" href="{{ hood.listing_url -}}">{{ hood.listing_address }}<br>{{ hood.listing_price }}</a>
             </div>
-            <div class="pure-u-3-4 hoodrankbar">
-                <div class="rank"><div class="wrapper"><div class="cell">2</div></div></div>
-                <h3 class="hoodlisthead">Central Harlem </h3>
-            </div>
-            <div class="pure-u-1-4 hoodrankbar">
-                <h3 class="rankzip" >ZIP 10037</h3>
-            </div>
-            <div class="pure-u-1-4 listingbox starmap">
-                <img src="static/images/centralharlem.png">
-                <br>MANHATTAN
-            </div>
-            <div class="pure-u-1-4 listingbox" style="text-align: center; color: rgb(215,48,39); ">
-                <div class="wrapper metric">
-                    <div class="cell">
-                        <div class="thermo"><i class="ss-icon"></i></div>
-                        <br>
-                        <span class="rankforecast">+16%</span>
-                    </div>
-                </div>
-                <span class="caption">12-month Forecast</span>
-            </div>
-            <div class="pure-u-1-4 listingbox" style="text-align: center; color: rgb(215,48,39); ">
-                <div class="wrapper metric">
-                    <div class="cell">
-                        <span class="price">$185k</span>
-                    </div>
-                </div>
-                <span class="caption">Median Price: 1.2k sqft</span>
-            </div>
-            <div class="pure-u-1-4 listingbox">
-                <img src="http://p.rdcpix.com/v01/l69012644-m0x.jpg">
-                579 W 215th St<br>$178,500
-            </div>
-            <div class="pure-u-3-4 hoodrankbar">
-                <div class="rank"><div class="wrapper"><div class="cell">3</div></div></div>
-                <h3 class="hoodlisthead">Midtown East </h3>
-            </div>
-            <div class="pure-u-1-4 hoodrankbar">
-                <h3 class="rankzip" >ZIP 10017</h3>
-            </div>
-            <div class="pure-u-1-4 listingbox starmap">
-                <img src="static/images/midtowneast.png">
-                <br>MANHATTAN
-            </div>
-            <div class="pure-u-1-4 listingbox" style="text-align: center; color: rgb(215,48,39);">
-                <div class="wrapper">
-                    <div class="cell">
-                        <div class="thermo"><i class="ss-icon"></i></div>
-                        <br>
-                        <span class="rankforecast">+16%</span>
-                        <br>
-                        12-month Forecast
-                    </div>
-                </div>
-            </div>
-            <div class="pure-u-1-4 listingbox" style="text-align: center; color: rgb(215,48,39); ">
-                <div class="wrapper metric">
-                    <div class="cell">
-                        <span class="price">$1,270k</span>
-                    </div>
-                </div>
-                <span class="caption">Median Price: 1.2k sqft</span>
-            </div>
-            <div class="pure-u-1-4 listingbox">
-                <img src="http://p.rdcpix.com/v01/l35814a44-m0x.jpg">
-                75 Ludlow St # 2a<br>$1,595,000
-            </div>
+            {% endfor %}
         </div>
     </div>
     <div id="explore" class="section">
