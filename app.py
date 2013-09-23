@@ -8,6 +8,7 @@ import numpy as np
 #import pandas
 #from pandas.io.sql import read_sql
 
+import model
 app = Flask("hothoods", template_folder=os.path.join(os.curdir, "templates"))
 
 @app.before_request
@@ -24,120 +25,23 @@ def db_disconnect(exception=None):
     """
     g.dbsession.close();
 
-import model
-
-
-# Huge query joins many tables to get a summary of each neighborhood: Neighborhood name, The most recent smoothed price estimate, and MLE price forecast.
-summary_query = """
-SELECT hood.ZipCode, hood.neighborhood, price.smoothed, minpred.mle, maxpred.mle
-FROM hoodnames hood, (
-	SELECT s.ZipCode, s.smoothed
-	FROM smoothed s
-	INNER JOIN (
-    	SELECT max(date) as date, zipCode, smoothed
-    	FROM smoothed
-    	WHERE smoothed IS NOT NULL
-		GROUP BY ZipCode) ss 
-	ON s.date = ss.date AND s.ZipCode = ss.ZipCode
-	) price, (
-	SELECT f.ZipCode, f.mle
-	FROM zipforecasts f
-	INNER JOIN (
-    	SELECT min(time) as time, zipCode, mle
-    	FROM zipforecasts
-    	WHERE mle IS NOT NULL
-        GROUP BY ZipCode) ff 
-        ON f.time = ff.time AND f.ZipCode = ff.ZipCode
-	) minpred, (
-	SELECT f.ZipCode, f.mle  FROM zipforecasts f
-	INNER JOIN (SELECT max(time) as time, ZipCode, mle
-    	FROM zipforecasts
-    	WHERE mle IS NOT NULL
-    	GROUP BY ZipCode) lastdate
-	ON lastdate.time = f.time AND lastdate.ZipCode = f.ZipCode) maxpred
-WHERE hood.ZipCode = price.ZipCode AND hood.ZipCode = minpred.ZipCode AND hood.ZipCode = maxpred.ZipCode
-"""
-
-lastpricequery = """
-SELECT 
-date AS SaleDate, smoothed
-FROM smoothed 
-WHERE (ZipCode='{zipcode}') AND smoothed IS NOT NULL
-ORDER BY SaleDate DESC
-LIMIT 1;
-"""
-
-def query_hoodnames(zip=None):
-    hoodnamequery = """
-    SELECT
-    ZipCode, Neighborhood
-    FROM hoodnames
-    """
-    if zip:
-        hoodnamequery += "WHERE (ZipCode='{zipcode}') LIMIT 1;".format(zipcode=zip);
-    else:
-        hoodnamequery += ";"
-    
-    ret = {}
-    for results in g.dbsession.resolve_query(hoodnamequery):
-        ret[results[0]] = results[1].title()
-    return ret
-
-def query_borough(zip):
-    boroquery = """
-        SELECT Borough FROM sales 
-        WHERE ZipCode={zipcode} LIMIT 1""".format(zipcode=zip)
-    return g.dbsession.resolve_query(boroquery)[0][0]
-
-zipquery = """
-SELECT 
-date AS SaleDate, smoothed
-FROM smoothed 
-WHERE (ZipCode='{zipcode}') AND smoothed IS NOT NULL
-ORDER BY SaleDate;
-"""
-
-forecastquery = """
-SELECT 
-time, mle, low80, high80
-FROM zipforecasts 
-WHERE (ZipCode='{zipcode}') AND mle IS NOT NULL
-ORDER BY time;
-"""
-
-currentpricequery = """
-SELECT s.ZipCode, s.smoothed
-FROM smoothed s
-INNER JOIN(
-        SELECT max(date) as date, zipCode, smoothed
-        FROM smoothed
-        WHERE smoothed IS NOT NULL
-        GROUP BY ZipCode
-) ss ON s.date = ss.date AND s.ZipCode = ss.ZipCode
-"""
-
 @app.route('/mapinfo.json')
 def mapinfo():
     """
     Return general info about all zip codes on the map.
+    Used to construct the map when the user lands.
     """
     # Get name of neighborhood
-    hoodnames = dict(query_hoodnames())
-    currentprices = dict(g.dbsession.resolve_query(currentpricequery))
+    hoodnames = dict(model.query_hoodnames())
+    currentprices = dict(g.dbsession.resolve_query(model.currentpricequery))
     ret = []
-    for row in g.dbsession.resolve_query(summary_query):
+    for row in g.dbsession.resolve_query(model.summary_query):
         zip = row[0]
         name = row[1].title()
         price = row[2]
         earlypred = np.exp(row[3])
         pred = np.exp(row[4])
         growth = (pred / earlypred)-1
-        if zip == '10004':
-            print zip
-            print price
-            print earlypred
-            print pred
-            print growth
         ret.append({
             "zip": zip,
             "hoodname": name,
@@ -152,18 +56,19 @@ def mapinfo():
 def ziptrend(zipcode=None):
     """
     Return info about a particular zip code.
+    Used to power the graph.
     """
     if not zipcode:
         raise Exception, 'page_not_found'
     
     # Get name of neighborhood
-    hoodnames = query_hoodnames(zip=zipcode)
+    hoodnames = model.query_hoodnames(zip=zipcode)
     hoodname = hoodnames[zipcode]
-    boroname = query_borough(zipcode)
+    boroname = model.query_borough(zipcode)
     
     # Get price history
     history = []
-    for row in g.dbsession.resolve_query(zipquery.format(zipcode=zipcode)):
+    for row in g.dbsession.resolve_query(model.zipquery.format(zipcode=zipcode)):
         history.append({"date": row[0], "price": float(row[1])})
         lasttime = row[0]
         lastprice = float(row[1])
@@ -173,7 +78,7 @@ def ziptrend(zipcode=None):
         dateformat = "%Y-%m-%d"
         forecasts = []
         #forecasts = [{"date": lasttime, "price": lastprice, "lo80": lastprice, "hi80": lastprice}]
-        forecast_query = g.dbsession.resolve_query(forecastquery.format(zipcode=zipcode))
+        forecast_query = g.dbsession.resolve_query(model.forecastquery.format(zipcode=zipcode))
         junctiontime = dt.strptime(lasttime, dateformat) + relativedelta(months=forecast_query[0][0])
         history.append({"date": dt.strftime(junctiontime, dateformat), "price": np.exp(float(forecast_query[0][1]))})
         for row in forecast_query:
@@ -184,7 +89,8 @@ def ziptrend(zipcode=None):
 @app.route('/')
 def home():
     """
-    Route not found by the other routes above. May point to a static template.
+    Serve the actual homepage. 
+    Not currently pulling dynamically but could readily be adapted to do so.
     """
     hoodprofiles = [{
             "hoodname": "Flatiron",
@@ -245,6 +151,6 @@ def regularpage(pagename=None):
     return render_template(pagename)
 
 if __name__ == '__main__':
-    print "Starting webserver."
+    print "Starting debugging server."
     app.run(debug=True, host='localhost', port=8000)
 
