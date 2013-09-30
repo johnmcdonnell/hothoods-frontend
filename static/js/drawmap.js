@@ -1,8 +1,6 @@
 
 // TODO: Encapsulate.
 var viewpercent = d3.format("+0%");
-var uparrow = '<i class="ss-icon"></i>';
-var downarrow = '<i class="ss-icon"></i>';
 var thermometer_template = _.template('<i class="ss-icon"><%= thermo %></i>')
 var thermometers = ["", "", "", "", ""];
 
