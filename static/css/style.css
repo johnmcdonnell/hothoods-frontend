@@ -158,6 +158,9 @@ iframe {
     height: 80px;
 }
 
+#about h3, #about p {
+	text-align: justify;
+}
 #aboutgrid {
     margin: 0 auto;
 }
@@ -213,6 +216,7 @@ svg {
 }
 
 #map > svg {
+    postiion: relative;
     fill: #eee;
 }
 
@@ -340,5 +344,19 @@ svg {
     margin: 5px;
     padding: 5px;
     float: left;
+}
+
+/* Tweaks for mobile: */
+@media screen and (max-width: 600px) {
+    #about h3 {
+        font-size: 3em;
+    }
+    #about p {
+        font-size: 2em;
+    }
+    #map > svg {
+        position: relative;
+        left: 100px;
+    }
 }
 

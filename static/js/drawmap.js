@@ -70,7 +70,9 @@ var buildmap = function(error, nyc, mapinfo) {
                 k = 3;
             centered = d;
             d3.select(this).classed("maphover", false);
-            $("#downarrow").fadeTo(0, 1);
+            if ($(window).width() > 900) {
+                $("#downarrow").fadeTo(0, 1);
+            }
             setup_trulia(zipname);
         } else {
             // Zoom out

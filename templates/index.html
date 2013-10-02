@@ -3,7 +3,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=600, user-scalable=false;">
+    <meta name="viewport" content="width=600, user-scalable=true;">
     <title>Hot Hoods</title>
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <link rel="stylesheet" href="static/css/pure-min.css" />
@@ -88,7 +88,7 @@
                     </div>
                 </div>
             </div>
-            <div id="downarrow" class="pure-hidden-phone pure-hidden-tablet">
+            <div id="downarrow" class="pure-u-1 pure-hidden-phone pure-hidden-tablet">
                 <i class="icon-long-arrow-down"></i> 
                 Scroll down to see listings in this neighborhood.
                 <i class="icon-long-arrow-down"></i> 
@@ -103,91 +103,92 @@
             </div>
         </div>
     </div>
-    <div id="about" class="footer">
-        <div class="pure-g-r" style="">
-            <div class="pure-u-1">
-                <h2 class="sectionhead">MORE INFORMATION</h2>
-            </div>
-            <div class="pure-u-1-4" style="padding: 0 1em 1em;">
-                <h2>How does it work?</h2>
-                <p><i class="icon-link"></i> <a target="_blank" href="http://jvmcd.nl/hothoods/#7">Methods slide</a></p>
-                <p style="text-align: justify;">
-                    This app provides analytics on the trends in New York City
-                    real estate prices since 2003. It's the result of comparing
-                    the predictions made by econometric forecasting models.
-                    The model that offered the best traction used exponential
-                    smoothing to determing the true value of prices on any
-                    given time, and the 10-year trend of the random walk those
-                    prices are taking. It would be really neat to try to
-                    correlate this with other geotemporal variables like subway
-                    ridership, something I'm looking into now.
-                </p>
-            </div>
-            <div class="pure-u-1-4" style="padding: 0 1em 1em;">
-                <h2>How well does it do?</h2>
-                <p><i class="icon-link"></i> <a target="_blank" href="http://jvmcd.nl/hothoods/#8">Validation slide</a></p>
-                <p style="text-align: justify;">
-                    To test the model, I took its predictions in December
-                    2010 and built an index for each neighborhood.  If
-                    you bought randomly based on market cap, you'd have made
-                    respectable 13% nominal return in two years. If you bought the top 5
-                    neighborhoods in the model, you'd have made, a killing,
-                    with 42% returns!  This validation technique assumes a
-                    highly diversified portfolio, so buyer beware. For more
-                    info, take a look at the <a target="_blank"
-                        href="http://jvmcd.nl/hothoods/#8">project slides</a>.
-                </p>
-            </div>
-            <div class="pure-u-1-4" style="padding: 0 1em 1em;">
-                <h2>About the developer</h2>
-                <p><i class="icon-link"></i> <a target="_blank" href="http://jvmcd.nl">Academic website</a></p>
-                <p style="text-align: justify;">
-                My name is John McDonnell. I just defended my PhD thesis in the cognitive psychology of
-                learning and reasoning at the <a href="http://nyuccl.org">NYU
-                    Computation & Cognition Lab</a>. I focused on computational
-                models as a way of formalizing psychological theories. You can
-                see some of my academic work <a
-                    href="http://jvmcd.nl">here</a>. As part of that work, I
-                became the lead developer on <a
-                    href="https://github.com/NYUCCL/psiTurk">PsiTurk</a>, an
-                online crowdsourcing platform for running experiments on
-                Amazon's <a href="http://mturk.com"> Mechanical Turk</a> service.
-                </p>
-            </div>
-            <br>
-            <div class="pure-u-1-8" style="padding: 0 1em 1em;">
-                <!-- <h3>Code</h3> -->
-                <h4 style="text-align: left; margin: 0;">Repositories:</h4>
-                <ul id="codelinks" style="margin: 0; padding-left: 1em;">
-                    <li><i class="icon-github"></i> <a href="https://github.com/johnmcdonnell/hothoods-frontend">Web stack</a></li>
-                    <li><i class="icon-github"></i> <a href="https://github.com/johnmcdonnell/hothoods_analytics">Analytics</a></li>
-                    <li><i class="icon-github"></i> <a href="https://github.com/johnmcdonnell/hothoods-backend">Munging</a></li>
-                </ul>
-            </div>
-            <div class="pure-u-1-8" style="padding: 0 1em 1em;">
-                <h4 style="text-align: left; margin-bottom: 0;">Slides:</h4>
-                <ul id="codelinks" style="margin: 0; padding-left: 1em;">
-                    <li><i class="icon-picture"></i> <a target="_blank"  href="http://jvmcd.nl/hothoods">Slides</a></li>
-                </ul>
-            </div>
-            <div class="pure-u-1-4" style="padding: 0 1em 1em;">
-                <!-- <h3>Data</h3> -->
-                <div class="wrapper" style="margin: 0 auto; height: 110px;">
-                    <div class="cell" style="position: relative;">
-                        <img src="static/images/nycopendata.png">
-                    </div>
+</div>
+<div id="about" class="footer">
+    <div class="pure-g-r" style="">
+        <div class="pure-u-1">
+            <h2 class="sectionhead">MORE INFORMATION</h2>
+        </div>
+        <div class="pure-u-1-4" style="padding: 0 1em 1em;">
+            <h3>How does it work?</h3>
+            <p><i class="icon-link"></i> <a target="_blank" href="http://jvmcd.nl/hothoods/#7">Methods slide</a></p>
+            <p>
+                This app provides analytics on the trends in New York City
+                real estate prices since 2003. It's the result of comparing
+                the predictions made by econometric forecasting models.
+                The model that offered the best traction used exponential
+                smoothing to determing the true value of prices on any
+                given time, and the 10-year trend of the random walk those
+                prices are taking. It would be really neat to try to
+                correlate this with other geotemporal variables like subway
+                ridership, something I'm looking into now.
+            </p>
+        </div>
+        <div class="pure-u-1-4" style="padding: 0 1em 1em;">
+            <h3>How well does it do?</h3>
+            <p><i class="icon-link"></i> <a target="_blank" href="http://jvmcd.nl/hothoods/#8">Validation slide</a></p>
+            <p>
+                To test the model, I took its predictions in December
+                2010 and built an index for each neighborhood.  If
+                you bought randomly based on market cap, you'd have made
+                respectable 13% nominal return in two years. If you bought the top 5
+                neighborhoods in the model, you'd have made, a killing,
+                with 42% returns!  This validation technique assumes a
+                highly diversified portfolio, so buyer beware. For more
+                info, take a look at the <a target="_blank"
+                    href="http://jvmcd.nl/hothoods/#8">project slides</a>.
+            </p>
+        </div>
+        <div class="pure-u-1-4" style="padding: 0 1em 1em;">
+            <h3>About the developer</h3>
+            <p><i class="icon-link"></i> <a target="_blank" href="http://jvmcd.nl">Academic website</a></p>
+            <p>
+            My name is John McDonnell. I just defended my PhD thesis in the cognitive psychology of
+            learning and reasoning at the <a href="http://nyuccl.org">NYU
+                Computation & Cognition Lab</a>. I focused on computational
+            models as a way of formalizing psychological theories. You can
+            see some of my academic work <a
+                href="http://jvmcd.nl">here</a>. As part of that work, I
+            became the lead developer on <a
+                href="https://github.com/NYUCCL/psiTurk">PsiTurk</a>, an
+            online crowdsourcing platform for running experiments on
+            Amazon's <a href="http://mturk.com"> Mechanical Turk</a> service.
+            </p>
+        </div>
+        <br>
+        <div class="pure-u-1-8" style="padding: 0 1em 1em;">
+            <!-- <h3>Code</h3> -->
+            <h4 style="text-align: left; margin: 0;">Repositories:</h4>
+            <ul id="codelinks" style="margin: 0; padding-left: 1em;">
+                <li><i class="icon-github"></i> <a href="https://github.com/johnmcdonnell/hothoods-frontend">Web stack</a></li>
+                <li><i class="icon-github"></i> <a href="https://github.com/johnmcdonnell/hothoods_analytics">Analytics</a></li>
+                <li><i class="icon-github"></i> <a href="https://github.com/johnmcdonnell/hothoods-backend">Munging</a></li>
+            </ul>
+        </div>
+        <div class="pure-u-1-8" style="padding: 0 1em 1em;">
+            <h4 style="text-align: left; margin-bottom: 0;">Slides:</h4>
+            <ul id="codelinks" style="margin: 0; padding-left: 1em;">
+                <li><i class="icon-picture"></i> <a target="_blank"  href="http://jvmcd.nl/hothoods">Slides</a></li>
+            </ul>
+        </div>
+        <div class="pure-u-1-4" style="padding: 0 1em 1em;">
+            <!-- <h3>Data</h3> -->
+            <div class="wrapper" style="margin: 0 auto; height: 110px;">
+                <div class="cell" style="position: relative;">
+                    <img src="static/images/nycopendata.png">
                 </div>
             </div>
-            <div class="pure-u-1-4" style="padding: 0 1em 1em;">
-                <!-- <h3>Author</h3> -->
-                <div class="wrapper" style="margin: 0 auto; height: 110px;">
-                    <div class="cell" style="position: relative;">
-                        <img id="me" src="static/images/john_sketch.png"><br>A <a href="http://jvmcdonnell.com"> jvmcdonnell.com </a> production
-                    </div>
+        </div>
+        <div class="pure-u-1-4" style="padding: 0 1em 1em;">
+            <!-- <h3>Author</h3> -->
+            <div class="wrapper" style="margin: 0 auto; height: 110px;">
+                <div class="cell" style="position: relative;">
+                    <img id="me" src="static/images/john_sketch.png"><br>A <a href="http://jvmcdonnell.com"> jvmcdonnell.com </a> production
                 </div>
             </div>
         </div>
     </div>
+</div>
 <script src="static/js/underscore.js"></script>
 <script src="static/js/d3.v3.min.js"></script>
 <script src="static/js/queue.v1.min.js"></script>
